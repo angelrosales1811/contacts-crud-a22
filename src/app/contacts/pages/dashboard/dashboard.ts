@@ -9,10 +9,9 @@ import { Contact } from '../../models/contact.interface';
   standalone: true,
   imports: [RouterLink],
   templateUrl: './dashboard.html',
-  styleUrl: './dashboard.scss'
+  styleUrl: './dashboard.scss',
 })
 export class Dashboard {
-
   private contactsService = inject(ContactsService);
 
   contacts = signal<Contact[]>([]);
@@ -22,21 +21,25 @@ export class Dashboard {
   }
 
   async loadContacts() {
-
-    const data =
-      await this.contactsService.getContacts();
+    const data = await this.contactsService.getContacts();
 
     this.contacts.set(data);
 
     console.log('DASHBOARD CONTACTS:', data);
   }
 
-  async deleteContact(id?: number) {
+  async deleteContact(id?: number): Promise<void> {
+    console.log('ID recibido:', id);
+    if (!id) {
+      return;
+    }
 
-    if (!id) return;
-
-    await this.contactsService.deleteContact(id);
-
-    await this.loadContacts();
+    try {
+      console.log('Eliminando contacto con ID:', id);
+      await this.contactsService.deleteContact(id);
+      await this.loadContacts();
+    } catch (error) {
+      console.error('Error al eliminar el contacto:', error);
+    }
   }
 }

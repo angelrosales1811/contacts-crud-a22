@@ -9,7 +9,11 @@ export class ContactsService {
   constructor(private supabase: SupabaseService) {}
 
   async getContacts() {
-    const { data, error } = await this.supabase.client.from('contacts').select('*').order('id');
+    const { data, error } = await this.supabase.client
+      .from('contacts')
+      .select('*')
+      .eq('active', true)
+      .order('id', { ascending: true });
 
     if (error) throw error;
 
@@ -23,7 +27,11 @@ export class ContactsService {
   }
 
   async deleteContact(id: number) {
-    const { error } = await this.supabase.client.from('contacts').delete().eq('id', id);
+    console.log('Eliminando contacto con ID:', id);
+    const { error } = await this.supabase.client
+      .from('contacts')
+      .update({ active: false })
+      .eq('id', id);
 
     if (error) throw error;
   }
