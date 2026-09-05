@@ -1,0 +1,144 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #000;
+  color: #fff;
+}
+
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+}
+
+/* HEADER */
+
+.page-header {
+  margin-bottom: 1rem;
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+
+.title-container h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.icon {
+  font-size: 1.5rem;
+}
+
+.divider {
+  height: 1px;
+  background: #222;
+  margin-bottom: 2rem;
+}
+
+/* FORM */
+
+.form-container {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.field {
+  margin-bottom: 1.25rem;
+}
+
+.field label {
+  display: block;
+  margin-bottom: .5rem;
+
+  font-size: .95rem;
+  font-weight: 500;
+
+  color: #f3f4f6;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: .85rem 1rem;
+
+  border-radius: 12px;
+  border: 1px solid #333;
+
+  background: transparent;
+  color: white;
+
+  font-size: .95rem;
+}
+
+.field textarea {
+  min-height: 120px;
+  resize: none;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: #9ca3af;
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: #60a5fa;
+}
+
+/* ERRORES */
+
+.error {
+  margin-top: .35rem;
+  color: #f87171;
+  font-size: .8rem;
+}
+
+/* ACCIONES */
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: 1.5rem;
+}
+
+.back-link {
+  color: white;
+  text-decoration: none;
+  font-size: .95rem;
+}
+
+.back-link:hover {
+  opacity: .8;
+}
+
+.actions button {
+  border: 1px solid #333;
+  border-radius: 8px;
+
+  background: transparent;
+  color: white;
+
+  padding: .75rem 1.25rem;
+
+  font-size: .95rem;
+
+  cursor: pointer;
+}
+
+.actions button:hover:not(:disabled) {
+  background: #111;
+}
+
+.actions button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}

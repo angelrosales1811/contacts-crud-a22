@@ -1,0 +1,146 @@
+<div class="page-container">
+
+  <header class="page-header">
+
+    <div class="title-container">
+      <span class="icon">📇</span>
+      <h1>Contactos</h1>
+    </div>
+
+  </header>
+
+  <div class="divider"></div>
+
+  <div class="form-container">
+
+    <form
+      [formGroup]="form"
+      (ngSubmit)="save()">
+
+      <!-- Nombre -->
+      <div class="field">
+
+        <label for="name">
+          Nombre:
+        </label>
+
+        <input
+          id="name"
+          type="text"
+          formControlName="name">
+
+        @if (
+          form.controls.name.touched &&
+          form.controls.name.hasError('required')
+        ) {
+
+          <p class="error">
+            Ingrese el nombre
+          </p>
+
+        }
+
+      </div>
+
+      <!-- Email -->
+      <div class="field">
+
+        <label for="email">
+          Email:
+        </label>
+
+        <input
+          id="email"
+          type="email"
+          formControlName="email">
+
+        @if (
+          form.controls.email.touched &&
+          form.controls.email.hasError('required')
+        ) {
+
+          <p class="error">
+            Ingrese el e-mail
+          </p>
+
+        }
+
+        @if (
+          form.controls.email.touched &&
+          form.controls.email.hasError('email')
+        ) {
+
+          <p class="error">
+            Ingrese un e-mail válido
+          </p>
+
+        }
+
+      </div>
+
+      <!-- Teléfono -->
+      <div class="field">
+
+        <label for="phone">
+          Número Telefónico:
+        </label>
+
+        <input
+          id="phone"
+          type="text"
+          formControlName="phone">
+
+        @if (
+          form.controls.phone.touched &&
+          form.controls.phone.hasError('required')
+        ) {
+
+          <p class="error">
+            Ingrese el número telefónico
+          </p>
+
+        }
+
+      </div>
+
+      <!-- Descripción -->
+      <div class="field">
+
+        <label for="description">
+          Descripción: (opcional)
+        </label>
+
+        <textarea
+          id="description"
+          rows="6"
+          placeholder="Breve descripción"
+          formControlName="description">
+        </textarea>
+
+      </div>
+
+      <div class="actions">
+
+        <a
+          routerLink="/contacts"
+          class="back-link">
+
+          ← Regresar
+
+        </a>
+
+        <button
+          type="submit"
+          [disabled]="form.invalid">
+
+          Crear contacto
+
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
