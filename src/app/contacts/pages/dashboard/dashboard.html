@@ -3,9 +3,7 @@
     <div class="title-container">
       <span class="icon">📇</span>
       <h1>Contactos</h1>
-      <button class="back-link" (click)="recoverContacts()">
-        recuperar contactos
-      </button>
+      <button class="back-link" (click)="recoverContacts()">recuperar contactos</button>
     </div>
   </header>
 
@@ -32,10 +30,10 @@
         </div>
       }
     </div>
-    <a routerLink="/contacts/new" class="create-link">
+    <button routerLink="/contacts/new" class="create-link">
       <span>+</span>
       <span>Crear contacto</span>
-    </a>
+    </button>
   </section>
 
   <section class="accordion-container">
@@ -49,12 +47,13 @@
 
             <span>
               {{ contactsByLetter[letter].length }}
-              
             </span>
           </div>
 
           <span class="accordion-icon">
-            {{ openedLetter === letter ? '−' : '+' }}
+            <mat-icon>
+              {{ openedLetter === letter ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
+            </mat-icon>
           </span>
         </button>
 
@@ -63,17 +62,23 @@
             <div class="contacts-grid">
               @for (contact of contactsByLetter[letter]; track contact.id) {
                 <article class="contact-card" [id]="'contact-' + contact.id">
-                  <h3>{{ contact.name }}</h3>
+                  <div class="card-header">
+                    <h3>{{ contact.name }}</h3>
+
+                    <div class="card-actions">
+                      <mat-icon class="edit-icon" (click)="updateContact(contact.id)">
+                        edit
+                      </mat-icon>
+
+                      <mat-icon class="delete-icon" (click)="deleteContact(contact.id)">
+                        delete
+                      </mat-icon>
+                    </div>
+                  </div>
 
                   <p>{{ contact.email }}</p>
 
                   <p>{{ contact.phone }}</p>
-
-                  <div class="actions">
-                    <button class="btn-edit" (click)="updateContact(contact.id)">Editar</button>
-
-                    <button class="delete-btn" (click)="deleteContact(contact.id)">Eliminar</button>
-                  </div>
                 </article>
               }
             </div>

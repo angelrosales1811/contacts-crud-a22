@@ -36,10 +36,10 @@
 .back-link {
   color: white;
   text-decoration: none;
-  font-size: .95rem;
+  font-size: 0.95rem;
 }
 .back-link:hover {
-  opacity: .5;
+  opacity: 0.5;
 }
 
 button {
@@ -49,9 +49,9 @@ button {
   background: transparent;
   color: white;
 
-  padding: .75rem 1.25rem;
+  padding: 0.75rem 1.25rem;
 
-  font-size: .95rem;
+  font-size: 0.95rem;
 
   cursor: pointer;
 }
@@ -117,7 +117,7 @@ button {
 .contacts-grid {
   display: grid;
 
-  grid-template-columns: repeat(auto-fill, minmax(240px, 2fr));
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
 
   gap: 1rem;
 
@@ -134,13 +134,20 @@ button {
   min-height: 100px;
   display: flex;
   flex-direction: column;
+  gap: 0.75rem;
 }
 
 .contact-card:hover {
   border-color: #333;
 }
-
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
 .contact-card h3 {
+  flex: 1;
   margin: 0 0 1rem;
   font-size: 1.25rem;
   font-weight: 600;
@@ -152,6 +159,28 @@ button {
   font-size: 0.95rem;
 
   overflow-wrap: break-word;
+}
+.card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.card-actions mat-icon {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.card-actions mat-icon:hover {
+  transform: scale(1.1);
+}
+
+.edit-icon {
+  color: #3b82f6;
+}
+
+.delete-icon {
+  color: #ef4444;
 }
 
 /* ACTIONS */
@@ -205,7 +234,7 @@ button {
 
 .accordion-container {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
   align-items: start;
 }
@@ -218,13 +247,12 @@ button {
   height: fit-content;
 }
 
-
 .accordion-item.expanded {
   grid-column: 1 / -1;
 }
 .accordion-header {
   width: 100%;
-  border: 0;
+  border: 1;
   background: transparent;
   color: #fff;
 
@@ -232,7 +260,7 @@ button {
   justify-content: space-between;
   align-items: center;
 
-  padding: 1rem 1.5rem;
+  padding: 0.5rem 0.5rem;
   cursor: pointer;
 
   font-size: 1rem;
@@ -245,8 +273,8 @@ button {
 }
 
 .letter-badge {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
 
   border-radius: 50%;
   background: #2952e3;
@@ -313,58 +341,95 @@ button {
   color: #9ca3af;
 }
 .contact-card {
-  transition: all .3s ease;
+  transition: all 0.3s ease;
 }
 
 .highlight-card {
   border: 2px solid #3b82f6 !important;
   box-shadow:
-    0 0 0 3px rgba(59,130,246,.25),
-    0 0 25px rgba(59,130,246,.5);
+    0 0 0 3px rgba(59, 130, 246, 0.25),
+    0 0 25px rgba(59, 130, 246, 0.5);
 
   transform: scale(1.02);
 }
-/* RESPONSIVE */
 
+/* TABLET */
 @media (max-width: 768px) {
+
+  .dashboard-container {
+    padding: 1rem;
+  }
+
   .toolbar {
     flex-direction: column;
     align-items: stretch;
+    gap: 1rem;
   }
 
-  .create-link {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-
-    padding: 0.75rem 1rem;
-
-    border-radius: 10px;
-
-    text-decoration: none;
-    color: white;
-
-    white-space: nowrap;
+  .search-container {
+    max-width: 100%;
   }
 
-  .create-link:hover {
-    background: #111;
+  .create-link,
+  button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .accordion-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+/* MÓVIL */
+@media (max-width: 480px) {
+
+  .dashboard-container {
+    padding: .75rem;
+    overflow-x: hidden;
+  }
+
+  .title-container {
+    flex-wrap: wrap;
+    gap: .5rem;
+  }
+
+  .title-container h1 {
+    font-size: 1.5rem;
+  }
+
+  .toolbar {
+    margin-bottom: 1rem;
+  }
+
+  .accordion-container {
+    grid-template-columns: 1fr;
+    gap: .75rem;
+  }
+
+  .accordion-header {
+    padding: .75rem;
+  }
+
+  .accordion-item.expanded {
+    grid-column: auto;
   }
 
   .contacts-grid {
     grid-template-columns: 1fr;
   }
-  .btn-edit {
-    background: #1d4ed8;
-    color: white;
 
-    padding: 0.5rem 0.75rem;
-
-    border-radius: 8px;
-
-    font-size: 0.85rem;
+  .contact-card {
+    padding: 1rem;
   }
 
-  
+  .contact-card h3 {
+    font-size: 1rem;
+    word-break: break-word;
+  }
 
+  .contact-card p {
+    word-break: break-word;
+  }
 }
