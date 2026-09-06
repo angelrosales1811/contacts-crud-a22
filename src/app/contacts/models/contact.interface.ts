@@ -1,5 +1,5 @@
 export interface Contact {
-  id?: number;
+  id: number;
 
   name: string;
   email: string;
@@ -9,4 +9,5 @@ export interface Contact {
 
   created_at?: string;
   updated_at?: string;
+  active?: boolean;
 }

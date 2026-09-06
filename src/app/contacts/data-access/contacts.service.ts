@@ -27,11 +27,32 @@ export class ContactsService {
   }
 
   async deleteContact(id: number) {
-    console.log('Eliminando contacto con ID:', id);
     const { error } = await this.supabase.client
       .from('contacts')
       .update({ active: false })
       .eq('id', id);
+
+    if (error) throw error;
+  }
+
+  async updateContact(id: number, contact: Partial<Contact>) {
+    const { error } = await this.supabase.client.from('contacts').update(contact).eq('id', id);
+  }
+
+  async getContactById(id: number) {
+    const { data, error } = await this.supabase.client
+      .from('contacts')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) throw error;
+
+    return data;
+  }
+
+  async recoverContacts() {
+    const { error } = await this.supabase.client.from('contacts').update({ active: true }).eq('active', false);
 
     if (error) throw error;
   }

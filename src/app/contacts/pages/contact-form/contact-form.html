@@ -13,44 +13,36 @@
       <!-- Nombre -->
       <div class="field">
         <label for="name"> Nombre: </label>
-
-        <input id="name" type="text" formControlName="name" />
-
+        <input class="input_name" id="name" type="text" formControlName="name" readonly />
         @if (form.controls.name.touched && form.controls.name.hasError('required')) {
           <p class="error">Ingrese el nombre</p>
         }
       </div>
-
       <!-- Email -->
       <div class="field">
         <label for="email"> Email: </label>
-
         <input id="email" type="email" formControlName="email" />
-
         @if (form.controls.email.touched && form.controls.email.hasError('required')) {
           <p class="error">Ingrese el e-mail</p>
         }
-
         @if (form.controls.email.touched && form.controls.email.hasError('email')) {
           <p class="error">Ingrese un e-mail válido</p>
         }
       </div>
-
       <!-- Teléfono -->
       <div class="field">
         <label for="phone"> Número Telefónico: </label>
-
-        <input id="phone" type="text" formControlName="phone" />
-
+        <input id="phone" type="text" formControlName="phone"
+        inputmode="numeric" 
+        maxlength="10"
+        (keypress)="onlyNumbers($event)"/>
         @if (form.controls.phone.touched && form.controls.phone.hasError('required')) {
           <p class="error">Ingrese el número telefónico</p>
         }
       </div>
-
       <!-- Descripción -->
       <div class="field">
         <label for="description"> Descripción: (opcional) </label>
-
         <textarea
           id="description"
           rows="6"
@@ -59,11 +51,9 @@
         >
         </textarea>
       </div>
-
       <div class="actions">
         <button routerLink="/contacts" class="back-link"> ← Regresar </button>
-
-        <button type="submit" [disabled]="form.invalid">Crear contacto</button>
+        <button type="submit" [disabled]="form.invalid || !form.dirty">Guardar</button>
       </div>
     </form>
   </div>

@@ -3,6 +3,9 @@
     <div class="title-container">
       <span class="icon">📇</span>
       <h1>Contactos</h1>
+      <button class="back-link" (click)="recoverContacts()">
+        recuperar contactos
+      </button>
     </div>
   </header>
 
@@ -10,26 +13,85 @@
 
   <section class="toolbar">
     <div class="search-container">
-      <input type="text" placeholder="Buscar" />
-    </div>
+      <input
+        type="text"
+        placeholder="Buscar contacto..."
+        [value]="searchTerm()"
+        (input)="searchTerm.set($any($event.target).value)"
+      />
 
+      @if (filteredContacts().length > 0) {
+        <div class="autocomplete-dropdown">
+          @for (contact of filteredContacts(); track contact.id) {
+            <div class="autocomplete-item" (click)="selectContact(contact)">
+              <strong>{{ contact.name }}</strong>
+
+              <small>{{ contact.email }}</small>
+            </div>
+          }
+        </div>
+      }
+    </div>
     <a routerLink="/contacts/new" class="create-link">
       <span>+</span>
       <span>Crear contacto</span>
     </a>
   </section>
 
-  <section class="contacts-grid">
+  <section class="accordion-container">
+    @for (letter of letters; track letter) {
+      <div class="accordion-item" [class.expanded]="openedLetter === letter">
+        <button class="accordion-header" (click)="toggleAccordion(letter)">
+          <div class="accordion-title">
+            <div class="letter-badge">
+              {{ letter }}
+            </div>
+
+            <span>
+              {{ contactsByLetter[letter].length }}
+              
+            </span>
+          </div>
+
+          <span class="accordion-icon">
+            {{ openedLetter === letter ? '−' : '+' }}
+          </span>
+        </button>
+
+        @if (openedLetter === letter) {
+          <div class="accordion-content">
+            <div class="contacts-grid">
+              @for (contact of contactsByLetter[letter]; track contact.id) {
+                <article class="contact-card" [id]="'contact-' + contact.id">
+                  <h3>{{ contact.name }}</h3>
+
+                  <p>{{ contact.email }}</p>
+
+                  <p>{{ contact.phone }}</p>
+
+                  <div class="actions">
+                    <button class="btn-edit" (click)="updateContact(contact.id)">Editar</button>
+
+                    <button class="delete-btn" (click)="deleteContact(contact.id)">Eliminar</button>
+                  </div>
+                </article>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </section>
+
+  <!-- <section class="contacts-grid">
     @for (contact of contacts(); track contact.id) {
       <article class="contact-card">
         <h3>{{ contact.name }}</h3>
-
         <p>{{ contact.email }}</p>
-
         <p>{{ contact.phone }}</p>
 
         <div class="actions">
-          <button type="button" class="edit-btn">Editar</button>
+          <button class="btn-edit" (click)="updateContact(contact.id)">Editar</button>
 
           <button type="button" class="delete-btn" (click)="deleteContact(contact.id)">
             Eliminar
@@ -41,5 +103,5 @@
         <p>No existen contactos registrados.</p>
       </div>
     }
-  </section>
+  </section> -->
 </div>

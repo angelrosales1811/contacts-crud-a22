@@ -6,13 +6,13 @@ import {
 } from '@angular/forms';
 
 import { Router } from '@angular/router';
-
+import { RouterLink } from '@angular/router';
 import { ContactsService } from '../../data-access/contacts.service';
 
 @Component({
   selector: 'app-create',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './create.html',
   styleUrl: './create.scss'
 })
