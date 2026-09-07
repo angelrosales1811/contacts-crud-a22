@@ -6,11 +6,12 @@ import { ContactsService } from '../../data-access/contacts.service';
 import { Contact } from '../../models/contact.interface';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-
+import { MatBadgeModule } from '@angular/material/badge';
+2
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterLink, MatButtonModule, MatIconModule, MatMenuModule],
+  imports: [RouterLink, MatButtonModule, MatIconModule, MatMenuModule, MatBadgeModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })

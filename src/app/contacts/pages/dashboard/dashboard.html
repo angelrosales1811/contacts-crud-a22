@@ -3,7 +3,7 @@
     <div class="title-container">
       <span class="icon">📇</span>
       <h1>Contactos</h1>
-      <button class="back-link" (click)="recoverContacts()">recuperar contactos</button>
+      <!-- <button class="back-link" (click)="recoverContacts()">recuperar contactos</button> -->
     </div>
   </header>
 
@@ -41,13 +41,25 @@
       <div class="accordion-item" [class.expanded]="openedLetter === letter">
         <button class="accordion-header" (click)="toggleAccordion(letter)">
           <div class="accordion-title">
-            <div class="letter-badge">
+            <div
+              class="letter-badge"
+              [matBadge]="contactsByLetter[letter].length"
+              [matBadgeHidden]="contactsByLetter[letter].length === 0"
+              matBadgeColor="warn"
+            >
               {{ letter }}
             </div>
 
-            <span>
-              {{ contactsByLetter[letter].length }}
-            </span>
+            <!-- <span>
+              <mat-icon
+                class="contact-icon"
+                [matBadge]="contactsByLetter[letter].length"
+                [matBadgeHidden]="contactsByLetter[letter].length === 0"
+                matBadgeColor="warn"
+              >
+                account_circle
+              </mat-icon>
+            </span> -->
           </div>
 
           <span class="accordion-icon">
