@@ -1,11 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ContactsService } from '../../data-access/contacts.service';
 @Component({
   selector: 'app-contact-form',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule],
   templateUrl: './contact-form.html',
   styleUrl: './contact-form.scss',
 })
@@ -71,6 +70,7 @@ export class ContactForm implements OnInit {
       description: this.form.get('description')?.value,
     });
 
+    sessionStorage.setItem('selectedContactId', this.contactId?.toString() || '');
     this.router.navigate(['/contacts']);
   }
   onlyNumbers(event: KeyboardEvent): boolean {
@@ -82,5 +82,9 @@ export class ContactForm implements OnInit {
     }
 
     return true;
+  }
+  goBack(): void {
+    sessionStorage.setItem('selectedContactId', this.contactId?.toString() || '');
+    this.router.navigate(['/contacts']);
   }
 }

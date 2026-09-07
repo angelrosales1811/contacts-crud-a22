@@ -32,10 +32,14 @@
       <!-- Teléfono -->
       <div class="field">
         <label for="phone"> Número Telefónico: </label>
-        <input id="phone" type="text" formControlName="phone"
-        inputmode="numeric" 
-        maxlength="10"
-        (keypress)="onlyNumbers($event)"/>
+        <input
+          id="phone"
+          type="text"
+          formControlName="phone"
+          inputmode="numeric"
+          maxlength="10"
+          (keypress)="onlyNumbers($event)"
+        />
         @if (form.controls.phone.touched && form.controls.phone.hasError('required')) {
           <p class="error">Ingrese el número telefónico</p>
         }
@@ -52,7 +56,8 @@
         </textarea>
       </div>
       <div class="actions">
-        <button routerLink="/contacts" class="back-link"> ← Regresar </button>
+        <button type="button" class="back-link" (click)="goBack()">← Regresar</button>
+
         <button type="submit" [disabled]="form.invalid || !form.dirty">Guardar</button>
       </div>
     </form>

@@ -5,10 +5,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { ContactsService } from '../../data-access/contacts.service';
 import { Contact } from '../../models/contact.interface';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterLink, MatButtonModule, MatIconModule],
+  imports: [RouterLink, MatButtonModule, MatIconModule, MatMenuModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
@@ -19,34 +21,50 @@ export class Dashboard {
   contacts = signal<Contact[]>([]);
   openedLetter: string | null = null;
   searchTerm = signal('');
+  removingContactId: number | null = null;
   async ngOnInit() {
     await this.loadContacts();
   }
 
   async loadContacts() {
-    const data = await this.contactsService.getContacts();
+    const contacts = await this.contactsService.getContacts();
 
-    this.contacts.set(data);
+    this.contacts.set(contacts);
 
-    console.log('DASHBOARD CONTACTS:', data);
+    const selectedId = sessionStorage.getItem('selectedContactId');
+
+    if (selectedId) {
+      const contact = contacts.find((c) => c.id === Number(selectedId));
+
+      if (contact) {
+        setTimeout(() => {
+          this.selectContact(contact);
+        }, 100);
+      }
+
+      sessionStorage.removeItem('selectedContactId');
+    }
   }
 
-  async deleteContact(id?: number): Promise<void> {
-    console.log('ID recibido:', id);
-    if (!id) {
-      return;
-    }
+  async deleteContact(id?: number) {
+    if (!id) return;
 
-    try {
-      console.log('Eliminando contacto con ID:', id);
+    // const confirmed = confirm('¿Estás seguro de eliminar este contacto?');
+
+    // if (!confirmed) return;
+
+    this.removingContactId = id;
+
+    setTimeout(async () => {
       await this.contactsService.deleteContact(id);
       await this.loadContacts();
-    } catch (error) {
-      console.error('Error al eliminar el contacto:', error);
-    }
+      this.removingContactId = null;
+    }, 500);
   }
 
   updateContact(id: number): void {
+    sessionStorage.setItem('selectedContact', id.toString());
+
     this.router.navigate(['/contacts/update', id]);
   }
   get contactsByLetter(): Record<string, any[]> {

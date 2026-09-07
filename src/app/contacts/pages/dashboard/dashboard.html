@@ -61,19 +61,29 @@
           <div class="accordion-content">
             <div class="contacts-grid">
               @for (contact of contactsByLetter[letter]; track contact.id) {
-                <article class="contact-card" [id]="'contact-' + contact.id">
+                <article
+                  class="contact-card"
+                  [id]="'contact-' + contact.id"
+                  [class.removing]="removingContactId === contact.id"
+                >
                   <div class="card-header">
                     <h3>{{ contact.name }}</h3>
 
-                    <div class="card-actions">
-                      <mat-icon class="edit-icon" (click)="updateContact(contact.id)">
-                        edit
-                      </mat-icon>
+                    <mat-icon [matMenuTriggerFor]="contactMenu" class="menu-button">
+                      more_vert
+                    </mat-icon>
 
-                      <mat-icon class="delete-icon" (click)="deleteContact(contact.id)">
-                        delete
-                      </mat-icon>
-                    </div>
+                    <mat-menu #contactMenu="matMenu" class="contact-menu">
+                      <div class="menu-icons">
+                        <mat-icon class="edit-icon" (click)="updateContact(contact.id)">
+                          edit
+                        </mat-icon>
+
+                        <mat-icon class="delete-icon" (click)="deleteContact(contact.id)">
+                          delete
+                        </mat-icon>
+                      </div>
+                    </mat-menu>
                   </div>
 
                   <p>{{ contact.email }}</p>
@@ -87,26 +97,4 @@
       </div>
     }
   </section>
-
-  <!-- <section class="contacts-grid">
-    @for (contact of contacts(); track contact.id) {
-      <article class="contact-card">
-        <h3>{{ contact.name }}</h3>
-        <p>{{ contact.email }}</p>
-        <p>{{ contact.phone }}</p>
-
-        <div class="actions">
-          <button class="btn-edit" (click)="updateContact(contact.id)">Editar</button>
-
-          <button type="button" class="delete-btn" (click)="deleteContact(contact.id)">
-            Eliminar
-          </button>
-        </div>
-      </article>
-    } @empty {
-      <div class="empty-state">
-        <p>No existen contactos registrados.</p>
-      </div>
-    }
-  </section> -->
 </div>
