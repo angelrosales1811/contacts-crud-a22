@@ -7,11 +7,12 @@ import { Contact } from '../../models/contact.interface';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
-2
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterLink, MatButtonModule, MatIconModule, MatMenuModule, MatBadgeModule],
+  imports: [RouterLink, MatButtonModule, MatIconModule, MatMenuModule, MatBadgeModule, MatTooltipModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
@@ -47,47 +48,54 @@ export class Dashboard {
     }
   }
 
-  async deleteContact(id?: number) {
-    if (!id) return;
+ async deleteContact(id: number): Promise<void> {
+  this.removingContactId = id;
 
-    // const confirmed = confirm('¿Estás seguro de eliminar este contacto?');
+  setTimeout(async () => {
+    await this.contactsService.deleteContact(id);
 
-    // if (!confirmed) return;
+    this.contacts.update(contacts =>
+      contacts.filter(contact => contact.id !== id)
+    );
 
-    this.removingContactId = id;
-
-    setTimeout(async () => {
-      await this.contactsService.deleteContact(id);
-      await this.loadContacts();
-      this.removingContactId = null;
-    }, 500);
-  }
+    this.removingContactId = null;
+  }, 400);
+}
 
   updateContact(id: number): void {
     sessionStorage.setItem('selectedContact', id.toString());
 
     this.router.navigate(['/contacts/update', id]);
   }
-  get contactsByLetter(): Record<string, any[]> {
-    return this.contacts().reduce(
-      (groups, contact) => {
-        const letter = contact.name.charAt(0).toUpperCase();
+  get contactsByLetter(): Record<string, Contact[]> {
+  return this.contacts().reduce(
+    (groups, contact) => {
+      const firstChar = contact.name.trim().charAt(0).toUpperCase();
 
-        if (!groups[letter]) {
-          groups[letter] = [];
-        }
+      const key = /^[A-ZÁÉÍÓÚÑ]$/i.test(firstChar)
+        ? firstChar
+        : '#';
 
-        groups[letter].push(contact);
+      if (!groups[key]) {
+        groups[key] = [];
+      }
 
-        return groups;
-      },
-      {} as Record<string, any[]>,
-    );
-  }
+      groups[key].push(contact);
+
+      return groups;
+    },
+    {} as Record<string, Contact[]>,
+  );
+}
 
   get letters(): string[] {
-    return Object.keys(this.contactsByLetter).sort();
-  }
+  return Object.keys(this.contactsByLetter).sort((a, b) => {
+    if (a === '#') return -1;
+    if (b === '#') return 1;
+
+    return a.localeCompare(b);
+  });
+}
 
   toggleAccordion(letter: string): void {
     this.openedLetter = this.openedLetter === letter ? null : letter;

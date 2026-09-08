@@ -16,14 +16,14 @@ export class ContactForm implements OnInit {
 
   form = this.formBuilder.nonNullable.group({
     name: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
+    email: ['', [ Validators.email]],
     phone: [
       '',
       [
         Validators.required,
         Validators.pattern(/^[0-9]+$/),
-        Validators.minLength(10),
-        Validators.maxLength(10),
+        Validators.maxLength(10)
+        // Validators.minLength(10),
       ],
     ],
     description: [''],
@@ -73,6 +73,7 @@ export class ContactForm implements OnInit {
     sessionStorage.setItem('selectedContactId', this.contactId?.toString() || '');
     this.router.navigate(['/contacts']);
   }
+  
   onlyNumbers(event: KeyboardEvent): boolean {
     const charCode = event.which ? event.which : event.keyCode;
 
@@ -83,6 +84,7 @@ export class ContactForm implements OnInit {
 
     return true;
   }
+
   goBack(): void {
     sessionStorage.setItem('selectedContactId', this.contactId?.toString() || '');
     this.router.navigate(['/contacts']);

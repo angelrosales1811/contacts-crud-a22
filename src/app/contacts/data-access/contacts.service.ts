@@ -13,7 +13,7 @@ export class ContactsService {
       .from('contacts')
       .select('*')
       .eq('active', true)
-      .order('id', { ascending: true });
+      .order('name', { ascending: true });
 
     if (error) throw error;
 
@@ -21,9 +21,15 @@ export class ContactsService {
   }
 
   async createContact(contact: Contact) {
-    const { error } = await this.supabase.client.from('contacts').insert(contact);
+    const { data, error } = await this.supabase.client
+      .from('contacts')
+      .insert(contact)
+      .select()
+      .single();
 
     if (error) throw error;
+
+    return data;
   }
 
   async deleteContact(id: number) {
@@ -52,7 +58,10 @@ export class ContactsService {
   }
 
   async recoverContacts() {
-    const { error } = await this.supabase.client.from('contacts').update({ active: true }).eq('active', false);
+    const { error } = await this.supabase.client
+      .from('contacts')
+      .update({ active: true })
+      .eq('active', false);
 
     if (error) throw error;
   }

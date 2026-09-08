@@ -75,6 +75,7 @@ button {
 .search-container {
   flex: 1;
   max-width: 600px;
+  position: relative;
 }
 
 .search-container input {
@@ -91,7 +92,7 @@ button {
 }
 
 .search-container input::placeholder {
-  color: #9ca3af;
+  color: #3e4c64;
 }
 
 .create-link {
@@ -106,7 +107,7 @@ button {
 }
 
 .create-link:hover {
-  opacity: 0.8;
+  opacity: 0.5;
 }
 
 /* GRID */
@@ -124,64 +125,87 @@ button {
 /* CARD */
 
 .contact-card {
-  background: #0a0a0a;
-  border: 1px solid #222;
-  border-radius: 16px;
-  padding: 1.5rem;
-  min-height: 100px;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
+  position: relative;
+  background: #1e1e1e;
+  border: 2px solid #3a3a3a;
+  border-radius: 12px;
+  overflow: visible;
+  box-shadow:
+    6px 6px 0 #000,
+    0 8px 20px rgba(0, 0, 0, 0.4);
 
-
-.contact-card:hover {
-  border-color: #333;
-}
-
-.contact-card {
   transition:
-    opacity 0.5s ease,
-    transform 0.5s ease,
-    max-height 0.5s ease,
-    margin 0.5s ease;
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.45s ease;
 }
 
 .contact-card.removing {
   opacity: 0;
-   filter: blur(20px);
-  transform: translateY(-50px);
+  transform:
+    translateX(-80px)
+    scale(0.7)
+    rotate(-5deg);
 }
+
+.contact-card:hover {
+  transform: scale(1.02) translateY(-10px);
+}
+
+.card-actions {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.menu-button {
+  cursor: pointer;
+  color: #bdbdbd;
+}
+
+.mat-mdc-menu-item {
+  min-height: 36px !important;
+  width: 36px !important;
+  padding: 0 !important;
+}
+
+.mat-mdc-menu-item .mat-icon {
+  margin: 0 !important;
+}
+
+.info-row {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  align-items: center;
+  min-height: 60px;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-row mat-icon {
+  justify-self: center;
+  color: #ff9800;
+}
+
+.info-row span {
+  padding: 0 1rem;
+  color: #f5f5f5;
+  word-break: break-word;
+}
+
+
 
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 1rem;
-}
-
-.menu-icons {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 8px;
-}
-
-.menu-icons mat-icon {
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.menu-icons mat-icon:hover {
-  transform: scale(1.15);
-}
-
-.edit-icon {
-  color: #2196f3;
-}
-
-.delete-icon {
-  color: #f44336;
 }
 
 /* Reducir ancho del menú */
@@ -206,11 +230,6 @@ button {
 
   overflow-wrap: break-word;
 }
-.card-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
 
 .card-actions mat-icon {
   cursor: pointer;
@@ -222,52 +241,23 @@ button {
 }
 
 .edit-icon {
-  color: #3b82f6;
+  color: #2f22e7;
+}
+
+.edit-icon:hover {
+  background: #638add;
+  color: black;
 }
 
 .delete-icon {
   color: #ef4444;
 }
 
-/* ACTIONS */
-
-.actions {
-  display: flex;
-  gap: 0.75rem;
-
-  margin-top: 1.25rem;
-}
-
-.actions button {
-  border: none;
-  border-radius: 8px;
-
-  padding: 0.65rem 1rem;
-
-  font-size: 0.9rem;
-
-  cursor: pointer;
-}
-
-.btn-edit {
-  background: #1d4ed8;
-  color: white;
-}
-
-.btn-edit:hover {
-  background: #638add;
-  color: black;
-}
-
-.delete-btn {
-  background: #b91c1c;
-  color: white;
-}
-
-.delete-btn:hover {
+.delete-icon:hover {
   background: #dc2626;
   color: black;
 }
+
 
 .empty-state {
   grid-column: 1 / -1;
@@ -280,7 +270,7 @@ button {
 
 .accordion-container {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(9, 1fr);
   gap: 1.5rem;
   align-items: start;
 }
@@ -298,7 +288,7 @@ button {
 }
 .accordion-header {
   width: 100%;
-  border: 1;
+  border: 1px solid #333;
   background: transparent;
   color: #fff;
 
@@ -355,10 +345,6 @@ button {
   border-top: 1px solid #2a2a2a;
 }
 
-.search-container {
-  position: relative;
-}
-
 .autocomplete-dropdown {
   position: absolute;
   top: calc(100% + 8px);
@@ -397,17 +383,12 @@ button {
 .autocomplete-item small {
   color: #9ca3af;
 }
-.contact-card {
-  transition: all 0.3s ease;
-}
 
 .highlight-card {
   border: 2px solid #3b82f6 !important;
   box-shadow:
     0 0 0 3px rgba(59, 130, 246, 0.25),
     0 0 25px rgba(59, 130, 246, 0.5);
-
-  transform: scale(1.02);
 }
 
 /* TABLET */
