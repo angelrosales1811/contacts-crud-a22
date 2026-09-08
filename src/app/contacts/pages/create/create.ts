@@ -62,4 +62,14 @@ export class Create {
       emitEvent: false,
     });
   }
+
+  toLowerCase(): void {
+    const control = this.form.get('email');
+
+    if (!control?.value) return;
+
+    control.setValue(control.value.toLowerCase(), {
+      emitEvent: false,
+    });
+  }
 }

@@ -23,8 +23,7 @@
           @for (contact of filteredContacts(); track contact.id) {
             <div class="autocomplete-item" (click)="selectContact(contact)">
               <strong>{{ contact.name }}</strong>
-
-              <small>{{ contact.email }}</small>
+              <small>{{ contact.phone }}</small>
             </div>
           }
         </div>

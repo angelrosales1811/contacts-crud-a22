@@ -42,7 +42,7 @@
       <div class="field">
         <label for="email"> Email: </label>
 
-        <input id="email" type="email" formControlName="email" />
+        <input id="email" type="email" formControlName="email" (input)="toLowerCase()"/>
 
         @if (form.controls.email.touched && form.controls.email.hasError('required')) {
           <p class="error">Ingrese el e-mail</p>

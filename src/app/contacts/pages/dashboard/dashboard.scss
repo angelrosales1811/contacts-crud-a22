@@ -141,10 +141,7 @@ button {
 
 .contact-card.removing {
   opacity: 0;
-  transform:
-    translateX(-80px)
-    scale(0.7)
-    rotate(-5deg);
+  transform: translateX(-80px) scale(0.7) rotate(-5deg);
 }
 
 .contact-card:hover {
@@ -199,8 +196,6 @@ button {
   word-break: break-word;
 }
 
-
-
 .card-header {
   display: flex;
   justify-content: space-between;
@@ -239,7 +234,6 @@ button {
 .edit-icon:hover {
   background: #638add;
   color: #000;
-
 }
 
 .delete-icon {
@@ -300,7 +294,6 @@ button {
   background: #dc2626;
   color: black;
 }
-
 
 .empty-state {
   grid-column: 1 / -1;
@@ -491,9 +484,9 @@ button {
     padding: 0.75rem;
   }
 
-.accordion-item.expanded {
-  grid-column: 1 / -1;
-}
+  .accordion-item.expanded {
+    grid-column: 1 / -1;
+  }
 
   .contacts-grid {
     grid-template-columns: 1fr;
