@@ -53,4 +53,13 @@ export class Create {
 
     this.router.navigate(['/contacts']);
   }
+  toUpperCaseName(): void {
+    const control = this.form.get('name');
+
+    if (!control?.value) return;
+
+    control.setValue(control.value.toUpperCase(), {
+      emitEvent: false,
+    });
+  }
 }

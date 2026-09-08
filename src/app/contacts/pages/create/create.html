@@ -14,28 +14,12 @@
       <div class="field">
         <label for="name"> Nombre: </label>
 
-        <input id="name" type="text" formControlName="name" />
+        <input id="name" type="text" formControlName="name" (input)="toUpperCaseName()"/>
 
         @if (form.controls.name.touched && form.controls.name.hasError('required')) {
           <p class="error">Ingrese el nombre</p>
         }
       </div>
-
-      <!-- Email -->
-      <div class="field">
-        <label for="email"> Email: </label>
-
-        <input id="email" type="email" formControlName="email" />
-
-        @if (form.controls.email.touched && form.controls.email.hasError('required')) {
-          <p class="error">Ingrese el e-mail</p>
-        }
-
-        @if (form.controls.email.touched && form.controls.email.hasError('email')) {
-          <p class="error">Ingrese un e-mail válido</p>
-        }
-      </div>
-
       <!-- Teléfono -->
       <div class="field">
         <label for="phone"> Número Telefónico: </label>
@@ -51,6 +35,21 @@
 
         @if (form.controls.phone.touched && form.controls.phone.hasError('required')) {
           <p class="error">Ingrese el número telefónico</p>
+        }
+      </div>
+
+      <!-- Email -->
+      <div class="field">
+        <label for="email"> Email: </label>
+
+        <input id="email" type="email" formControlName="email" />
+
+        @if (form.controls.email.touched && form.controls.email.hasError('required')) {
+          <p class="error">Ingrese el e-mail</p>
+        }
+
+        @if (form.controls.email.touched && form.controls.email.hasError('email')) {
+          <p class="error">Ingrese un e-mail válido</p>
         }
       </div>
 
