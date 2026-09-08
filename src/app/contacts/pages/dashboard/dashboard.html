@@ -1,7 +1,7 @@
 <div class="dashboard-container">
   <header class="dashboard-header">
     <div class="title-container">
-      <span class="icon">📇</span>
+      <span class="icon" (click)="recoverContacts()">📇</span>
       <h1>Contactos</h1>
       <!-- <button class="back-link" (click)="recoverContacts()">recuperar contactos</button> -->
     </div>
@@ -82,14 +82,16 @@
                       more_vert
                     </mat-icon>
 
-                    <mat-menu class="menu-icons" #contactMenu="matMenu">
-                      <mat-icon class="edit-icon" (click)="updateContact(contact.id)"
-                        >edit</mat-icon
-                      >
+                    <mat-menu #contactMenu="matMenu" class="menu-icons">
+                      <div class="menu-icons-container">
+                        <mat-icon class="edit-icon" (click)="updateContact(contact.id)">
+                          edit
+                        </mat-icon>
 
-                      <mat-icon class="delete-icon" (click)="deleteContact(contact.id)"
-                        >delete</mat-icon
-                      >
+                        <mat-icon class="delete-icon" (click)="deleteContact(contact.id)">
+                          delete
+                        </mat-icon>
+                      </div>
                     </mat-menu>
                   </div>
 
