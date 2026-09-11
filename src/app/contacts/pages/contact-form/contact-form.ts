@@ -43,7 +43,7 @@ export class ContactForm implements OnInit {
     const contact = await this.contactsService.getContactById(this.contactId);
 
     if (!contact) {
-      this.router.navigate(['/contacts']);
+      this.router.navigate(['/']);
       return;
     }
 
@@ -71,7 +71,7 @@ export class ContactForm implements OnInit {
     });
 
     sessionStorage.setItem('selectedContactId', this.contactId?.toString() || '');
-    this.router.navigate(['/contacts']);
+    this.router.navigate(['/']);
   }
   
   onlyNumbers(event: KeyboardEvent): boolean {
@@ -87,6 +87,6 @@ export class ContactForm implements OnInit {
 
   goBack(): void {
     sessionStorage.setItem('selectedContactId', this.contactId?.toString() || '');
-    this.router.navigate(['/contacts']);
+    this.router.navigate(['/']);
   }
 }

@@ -51,7 +51,8 @@ export class Create {
 
     sessionStorage.setItem('selectedContactId', contact.id.toString());
 
-    this.router.navigate(['/contacts']);
+    
+    this.router.navigate(['/']);
   }
   toUpperCaseName(): void {
     const control = this.form.get('name');

@@ -1,0 +1,27 @@
+.login-container {
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: #000;
+}
+
+.login-card {
+  width: 350px;
+
+  padding: 2rem;
+
+  background: #1e1e1e;
+
+  border: 1px solid #333;
+
+  border-radius: 16px;
+
+  text-align: center;
+}
+
+.google-btn {
+  width: 100%;
+}

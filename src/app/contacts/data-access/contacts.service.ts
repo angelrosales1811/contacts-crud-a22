@@ -8,22 +8,42 @@ import { Contact } from '../models/contact.interface';
 export class ContactsService {
   constructor(private supabase: SupabaseService) {}
 
+  private async getCurrentUserId(): Promise<string> {
+    const {
+      data: { user },
+    } = await this.supabase.client.auth.getUser();
+
+    if (!user) {
+      throw new Error('Usuario no autenticado');
+    }
+
+    return user.id;
+  }
+
   async getContacts() {
+    const userId = await this.getCurrentUserId();
+
     const { data, error } = await this.supabase.client
       .from('contacts')
       .select('*')
+      .eq('user_id', userId)
       .eq('active', true)
       .order('name', { ascending: true });
 
     if (error) throw error;
 
-    return data;
+    return data ?? [];
   }
 
   async createContact(contact: Contact) {
+    const userId = await this.getCurrentUserId();
+
     const { data, error } = await this.supabase.client
       .from('contacts')
-      .insert(contact)
+      .insert({
+        ...contact,
+        user_id: userId,
+      })
       .select()
       .single();
 
@@ -32,24 +52,38 @@ export class ContactsService {
     return data;
   }
 
-  async deleteContact(id: number) {
+  async updateContact(id: number, contact: Partial<Contact>) {
+    const userId = await this.getCurrentUserId();
+
     const { error } = await this.supabase.client
       .from('contacts')
-      .update({ active: false })
-      .eq('id', id);
+      .update(contact)
+      .eq('id', id)
+      .eq('user_id', userId);
 
     if (error) throw error;
   }
 
-  async updateContact(id: number, contact: Partial<Contact>) {
-    const { error } = await this.supabase.client.from('contacts').update(contact).eq('id', id);
+  async deleteContact(id: number) {
+    const userId = await this.getCurrentUserId();
+
+    const { error } = await this.supabase.client
+      .from('contacts')
+      .update({ active: false })
+      .eq('id', id)
+      .eq('user_id', userId);
+
+    if (error) throw error;
   }
 
   async getContactById(id: number) {
+    const userId = await this.getCurrentUserId();
+
     const { data, error } = await this.supabase.client
       .from('contacts')
       .select('*')
       .eq('id', id)
+      .eq('user_id', userId)
       .single();
 
     if (error) throw error;
@@ -58,10 +92,13 @@ export class ContactsService {
   }
 
   async recoverContacts() {
+    const userId = await this.getCurrentUserId();
+
     const { error } = await this.supabase.client
       .from('contacts')
       .update({ active: true })
-      .eq('active', false);
+      .eq('active', false)
+      .eq('user_id', userId);
 
     if (error) throw error;
   }

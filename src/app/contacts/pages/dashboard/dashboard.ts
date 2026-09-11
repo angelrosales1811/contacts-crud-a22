@@ -8,18 +8,28 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { AuthService } from '../../../core/services/auth.service';
+import { SupabaseService } from '../../../core/services/supabase.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterLink, MatButtonModule, MatIconModule, MatMenuModule, MatBadgeModule, MatTooltipModule],
+  imports: [
+    RouterLink,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+    MatBadgeModule,
+    MatTooltipModule,
+  ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
 export class Dashboard {
   private contactsService = inject(ContactsService);
   private router = inject(Router);
-
+  private authService = inject(AuthService);
+  private supabase = inject(SupabaseService);
   contacts = signal<Contact[]>([]);
   openedLetter: string | null = null;
   searchTerm = signal('');
@@ -29,38 +39,46 @@ export class Dashboard {
   }
 
   async loadContacts() {
-    const contacts = await this.contactsService.getContacts();
+    const {
+      data: { session },
+    } = await this.supabase.client.auth.getSession();
 
-    this.contacts.set(contacts);
+    console.log(session);
 
-    const selectedId = sessionStorage.getItem('selectedContactId');
+    try {
+      const contacts = await this.contactsService.getContacts();
+      console.log('CONTACTS:', contacts);
+      this.contacts.set(contacts);
 
-    if (selectedId) {
-      const contact = contacts.find((c) => c.id === Number(selectedId));
+      const selectedId = sessionStorage.getItem('selectedContactId');
 
-      if (contact) {
-        setTimeout(() => {
-          this.selectContact(contact);
-        }, 100);
+      if (selectedId) {
+        const contact = contacts.find((c) => c.id === Number(selectedId));
+
+        if (contact) {
+          setTimeout(() => {
+            this.selectContact(contact);
+          }, 100);
+        }
+
+        sessionStorage.removeItem('selectedContactId');
       }
-
-      sessionStorage.removeItem('selectedContactId');
+    } catch (error) {
+      console.error('LOAD CONTACTS ERROR:', error);
     }
   }
 
- async deleteContact(id: number): Promise<void> {
-  this.removingContactId = id;
+  async deleteContact(id: number): Promise<void> {
+    this.removingContactId = id;
 
-  setTimeout(async () => {
-    await this.contactsService.deleteContact(id);
+    setTimeout(async () => {
+      await this.contactsService.deleteContact(id);
 
-    this.contacts.update(contacts =>
-      contacts.filter(contact => contact.id !== id)
-    );
+      this.contacts.update((contacts) => contacts.filter((contact) => contact.id !== id));
 
-    this.removingContactId = null;
-  }, 400);
-}
+      this.removingContactId = null;
+    }, 400);
+  }
 
   updateContact(id: number): void {
     sessionStorage.setItem('selectedContact', id.toString());
@@ -68,34 +86,32 @@ export class Dashboard {
     this.router.navigate(['/contacts/update', id]);
   }
   get contactsByLetter(): Record<string, Contact[]> {
-  return this.contacts().reduce(
-    (groups, contact) => {
-      const firstChar = contact.name.trim().charAt(0).toUpperCase();
+    return this.contacts().reduce(
+      (groups, contact) => {
+        const firstChar = contact.name.trim().charAt(0).toUpperCase();
 
-      const key = /^[A-ZÁÉÍÓÚÑ]$/i.test(firstChar)
-        ? firstChar
-        : '#';
+        const key = /^[A-ZÁÉÍÓÚÑ]$/i.test(firstChar) ? firstChar : '#';
 
-      if (!groups[key]) {
-        groups[key] = [];
-      }
+        if (!groups[key]) {
+          groups[key] = [];
+        }
 
-      groups[key].push(contact);
+        groups[key].push(contact);
 
-      return groups;
-    },
-    {} as Record<string, Contact[]>,
-  );
-}
+        return groups;
+      },
+      {} as Record<string, Contact[]>,
+    );
+  }
 
   get letters(): string[] {
-  return Object.keys(this.contactsByLetter).sort((a, b) => {
-    if (a === '#') return -1;
-    if (b === '#') return 1;
+    return Object.keys(this.contactsByLetter).sort((a, b) => {
+      if (a === '#') return -1;
+      if (b === '#') return 1;
 
-    return a.localeCompare(b);
-  });
-}
+      return a.localeCompare(b);
+    });
+  }
 
   toggleAccordion(letter: string): void {
     this.openedLetter = this.openedLetter === letter ? null : letter;
@@ -149,5 +165,9 @@ export class Dashboard {
     this.contactsService.recoverContacts().then(() => {
       this.loadContacts();
     });
+  }
+
+  async logout(): Promise<void> {
+    await (this.authService as { signOut: () => Promise<void> }).signOut();
   }
 }
