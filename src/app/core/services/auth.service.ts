@@ -30,7 +30,9 @@ export class AuthService {
   }
 
   isDemoMode(): boolean {
-    return sessionStorage.getItem('demo-mode') === 'true';
+    return (
+      sessionStorage.getItem('demo-mode') === 'true' && !localStorage.getItem('sb-access-token')
+    );
   }
 
   clearDemoMode(): void {

@@ -236,6 +236,17 @@ button {
   word-break: break-word;
 }
 
+.copy-icon {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.copy-icon:hover {
+  color: #3b82f6;
+  transform: scale(1.1);
+}
+
+
 .card-header {
   display: flex;
   justify-content: space-between;

@@ -105,17 +105,38 @@
                   </div>
 
                   <div class="info-row">
-                    <mat-icon>person</mat-icon>
+                    <mat-icon
+                      matTooltip="Copiar al portapapeles"
+                      (click)="copyToClipboard(contact.name)"
+                      class="copy-icon"
+                    >
+                      person
+                    </mat-icon>
+
                     <span>{{ contact.name }}</span>
                   </div>
 
                   <div class="info-row">
-                    <mat-icon>phone</mat-icon>
+                    <mat-icon
+                      matTooltip="Copiar al portapapeles"
+                      (click)="copyToClipboard(contact.phone)"
+                      class="copy-icon"
+                    >
+                      phone
+                    </mat-icon>
+
                     <span>{{ contact.phone }}</span>
                   </div>
 
                   <div class="info-row">
-                    <mat-icon>email</mat-icon>
+                    <mat-icon
+                      matTooltip="Copiar al portapapeles"
+                      (click)="copyToClipboard(contact.email)"
+                      class="copy-icon"
+                    >
+                      email
+                    </mat-icon>
+
                     <span>{{ contact.email }}</span>
                   </div>
                 </article>

@@ -10,6 +10,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthService } from '../../../core/services/auth.service';
 import { SupabaseService } from '../../../core/services/supabase.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-dashboard',
@@ -30,6 +31,7 @@ export class Dashboard {
   private router = inject(Router);
   private authService = inject(AuthService);
   private supabase = inject(SupabaseService);
+  private snackBar = inject(MatSnackBar);
   contacts = signal<Contact[]>([]);
   openedLetter: string | null = null;
   searchTerm = signal('');
@@ -169,5 +171,13 @@ export class Dashboard {
 
   async logout(): Promise<void> {
     await (this.authService as { signOut: () => Promise<void> }).signOut();
+  }
+
+  copyToClipboard(value: string): void {
+    navigator.clipboard.writeText(value);
+
+    this.snackBar.open('Copiado al portapapeles', 'Cerrar', {
+      duration: 2000,
+    });
   }
 }

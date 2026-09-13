@@ -14,6 +14,7 @@ export class Login {
   private router = inject(Router);
 
   async loginWithGoogle() {
+    this.authService.clearDemoMode();
     await this.authService.signInWithGoogle();
   }
 
