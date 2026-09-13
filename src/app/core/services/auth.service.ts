@@ -10,11 +10,14 @@ export class AuthService {
     private supabase: SupabaseService
   ) {}
 
-  async signInWithGoogle() {
-    await this.supabase.client.auth.signInWithOAuth({
-      provider: 'google'
-    });
-  }
+ async signInWithGoogle() {
+  await this.supabase.client.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `${window.location.origin}`
+    }
+  });
+}
 
   async signOut() {
     await this.supabase.client.auth.signOut();
