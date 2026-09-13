@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
@@ -18,7 +19,7 @@ export class Create {
   private contactsService = inject(ContactsService);
 
   private router = inject(Router);
-
+  private snackBar = inject(MatSnackBar);
   form = this.fb.group({
     name: ['', Validators.required],
     email: ['', [Validators.email]],
@@ -45,15 +46,39 @@ export class Create {
     return true;
   }
 
-  async save() {
-    if (this.form.invalid) return;
-    const contact = await this.contactsService.createContact(this.form.getRawValue() as any);
-
-    sessionStorage.setItem('selectedContactId', contact.id.toString());
-
-    
-    this.router.navigate(['/']);
+  async save(): Promise<void> {
+  if (this.form.invalid) {
+    return;
   }
+
+  try {
+    const contact = await this.contactsService.createContact(
+      this.form.getRawValue() as any
+    );
+
+    this.snackBar.open('✅ Contacto creado', 'Cerrar', {
+      duration: 3000,
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+    });
+
+    sessionStorage.setItem(
+      'selectedContactId',
+      contact.id.toString()
+    );
+
+    this.router.navigate(['/']);
+
+  } catch (error) {
+    console.error('Error al crear contacto:', error);
+
+    this.snackBar.open('❌ Contacto no creado', 'Cerrar', {
+      duration: 4000,
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+    });
+  }
+}
   toUpperCaseName(): void {
     const control = this.form.get('name');
 

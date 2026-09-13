@@ -11,6 +11,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthService } from '../../../core/services/auth.service';
 import { SupabaseService } from '../../../core/services/supabase.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-dashboard',
@@ -32,6 +34,7 @@ export class Dashboard {
   private authService = inject(AuthService);
   private supabase = inject(SupabaseService);
   private snackBar = inject(MatSnackBar);
+  private dialog = inject(MatDialog);
   contacts = signal<Contact[]>([]);
   openedLetter: string | null = null;
   searchTerm = signal('');
@@ -178,6 +181,24 @@ export class Dashboard {
 
     this.snackBar.open('Copiado al portapapeles', 'Cerrar', {
       duration: 2000,
+    });
+  }
+
+  confirmDelete(contact: Contact): void {
+    const dialogRef = this.dialog.open(ConfirmDialog, {
+      width: '350px',
+      data: {
+        title: 'Eliminar contacto',
+        message: `¿Desea eliminar a ${contact.name}?`,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(async (confirmed) => {
+      if (!confirmed) {
+        return;
+      }
+
+      await this.deleteContact(contact.id);
     });
   }
 }

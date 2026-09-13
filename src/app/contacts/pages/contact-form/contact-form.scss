@@ -144,3 +144,11 @@
   opacity: .5;
   cursor: not-allowed;
 }
+
+::ng-deep .success-snackbar {
+  --mdc-snackbar-container-color: #16a34a;
+}
+
+::ng-deep .error-snackbar {
+  --mdc-snackbar-container-color: #dc2626;
+}

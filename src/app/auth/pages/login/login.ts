@@ -12,6 +12,10 @@ export class Login {
 
   private authService = inject(AuthService);
   private router = inject(Router);
+  
+  ngOnInit(): void {
+  this.authService.clearDemoMode();
+}
 
   async loginWithGoogle() {
     this.authService.clearDemoMode();

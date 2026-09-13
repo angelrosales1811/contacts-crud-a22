@@ -97,7 +97,7 @@
                           edit
                         </mat-icon>
 
-                        <mat-icon class="delete-icon" (click)="deleteContact(contact.id)">
+                        <mat-icon class="delete-icon" (click)="confirmDelete(contact)">
                           delete
                         </mat-icon>
                       </div>
@@ -106,7 +106,7 @@
 
                   <div class="info-row">
                     <mat-icon
-                      matTooltip="Copiar al portapapeles"
+                      matTooltip="copiar"
                       (click)="copyToClipboard(contact.name)"
                       class="copy-icon"
                     >
@@ -118,7 +118,7 @@
 
                   <div class="info-row">
                     <mat-icon
-                      matTooltip="Copiar al portapapeles"
+                      matTooltip="copiar"
                       (click)="copyToClipboard(contact.phone)"
                       class="copy-icon"
                     >
@@ -130,7 +130,7 @@
 
                   <div class="info-row">
                     <mat-icon
-                      matTooltip="Copiar al portapapeles"
+                      matTooltip="copiar"
                       (click)="copyToClipboard(contact.email)"
                       class="copy-icon"
                     >

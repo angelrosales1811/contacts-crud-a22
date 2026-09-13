@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ContactsService } from '../../data-access/contacts.service';
 @Component({
   selector: 'app-contact-form',
@@ -11,18 +12,19 @@ import { ContactsService } from '../../data-access/contacts.service';
 export class ContactForm implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private snackBar = inject(MatSnackBar);
   private contactsService = inject(ContactsService);
   private formBuilder = inject(FormBuilder);
 
   form = this.formBuilder.nonNullable.group({
     name: ['', Validators.required],
-    email: ['', [ Validators.email]],
+    email: ['', [Validators.email]],
     phone: [
       '',
       [
         Validators.required,
         Validators.pattern(/^[0-9]+$/),
-        Validators.maxLength(10)
+        Validators.maxLength(10),
         // Validators.minLength(10),
       ],
     ],
@@ -63,17 +65,35 @@ export class ContactForm implements OnInit {
       return;
     }
 
-    await this.contactsService.updateContact(this.contactId!, {
-      name: this.form.get('name')?.value,
-      email: this.form.get('email')?.value,
-      phone: this.form.get('phone')?.value,
-      description: this.form.get('description')?.value,
-    });
+    try {
+      await this.contactsService.updateContact(this.contactId!, {
+        name: this.form.get('name')?.value,
+        email: this.form.get('email')?.value,
+        phone: this.form.get('phone')?.value,
+        description: this.form.get('description')?.value,
+      });
 
-    sessionStorage.setItem('selectedContactId', this.contactId?.toString() || '');
-    this.router.navigate(['/']);
+      sessionStorage.setItem('selectedContactId', this.contactId?.toString() || '');
+
+      this.snackBar.open('✅ Contacto actualizado', 'Cerrar', {
+        duration: 3000,
+        panelClass: ['success-snackbar'],
+        horizontalPosition: 'end',
+        verticalPosition: 'top',
+      });
+
+      this.router.navigate(['/']);
+    } catch (error) {
+      console.error('Error al actualizar contacto:', error);
+
+      this.snackBar.open('❌ Contacto no actualizado', 'Cerrar', {
+        duration: 4000,
+        panelClass: ['error-snackbar'],
+        horizontalPosition: 'end',
+        verticalPosition: 'top',
+      });
+    }
   }
-  
   onlyNumbers(event: KeyboardEvent): boolean {
     const charCode = event.which ? event.which : event.keyCode;
 
