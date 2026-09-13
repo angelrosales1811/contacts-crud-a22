@@ -2,22 +2,19 @@ import { SupabaseService } from './supabase.service';
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
+  constructor(private supabase: SupabaseService) {}
 
-  constructor(
-    private supabase: SupabaseService
-  ) {}
-
- async signInWithGoogle() {
-  await this.supabase.client.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: `${window.location.origin}`
-    }
-  });
-}
+  async signInWithGoogle() {
+    await this.supabase.client.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}`,
+      },
+    });
+  }
 
   async signOut() {
     await this.supabase.client.auth.signOut();
@@ -25,5 +22,18 @@ export class AuthService {
 
   async getUser() {
     return this.supabase.client.auth.getUser();
+  }
+
+  //////////////////////////////MODO DEMO//////////////////////////////
+  setDemoMode(): void {
+    sessionStorage.setItem('demo-mode', 'true');
+  }
+
+  isDemoMode(): boolean {
+    return sessionStorage.getItem('demo-mode') === 'true';
+  }
+
+  clearDemoMode(): void {
+    sessionStorage.removeItem('demo-mode');
   }
 }

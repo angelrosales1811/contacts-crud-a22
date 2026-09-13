@@ -97,3 +97,61 @@
   height: 40px;
   object-fit: contain;
 }
+
+.login-container {
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.demo-button {
+  width: 100%;
+  max-width: 420px;
+
+  padding: 0.9rem 1rem;
+
+  border: 1px solid #3b82f6;
+  border-radius: 12px;
+
+  background: linear-gradient(
+    135deg,
+    #1e3a8a,
+    #0b1a3b
+  );
+
+  color: #fff;
+
+  font-size: 1rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+
+  box-shadow:
+    0 4px 12px rgba(37, 99, 235, 0.25),
+    0 0 0 1px rgba(59, 130, 246, 0.15);
+}
+
+.demo-button:hover {
+  background: linear-gradient(
+    135deg,
+    #2563eb,
+    #3b82f6
+  );
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 20px rgba(37, 99, 235, 0.35),
+    0 0 12px rgba(59, 130, 246, 0.25);
+}
+
+.demo-button:active {
+  transform: translateY(0);
+}
+
+.demo-button::before {
+  content: '🎯';
+  margin-right: 0.5rem;
+}
+

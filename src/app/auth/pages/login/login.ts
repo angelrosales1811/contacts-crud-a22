@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
@@ -10,8 +11,15 @@ import { AuthService } from '../../../core/services/auth.service';
 export class Login {
 
   private authService = inject(AuthService);
+  private router = inject(Router);
 
   async loginWithGoogle() {
     await this.authService.signInWithGoogle();
   }
+
+  loginDemo(): void {
+  this.authService.setDemoMode();
+
+  this.router.navigate(['/']);
+}
 }

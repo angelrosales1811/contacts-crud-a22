@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
 import { SupabaseService } from '../../core/services/supabase.service';
 import { Contact } from '../models/contact.interface';
+import { DEMO_CONTACTS } from '../data-access/demo-contacts';
+import { AuthService } from '../../core/services/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ContactsService {
-  constructor(private supabase: SupabaseService) {}
+  constructor(
+    private supabase: SupabaseService,
+    private authService: AuthService
+  ) {}
 
   private async getCurrentUserId(): Promise<string> {
     const {
@@ -21,6 +26,11 @@ export class ContactsService {
   }
 
   async getContacts() {
+
+    if (this.authService.isDemoMode()) {
+      return DEMO_CONTACTS.filter(contact => contact.active);
+    }
+
     const userId = await this.getCurrentUserId();
 
     const { data, error } = await this.supabase.client
@@ -36,6 +46,19 @@ export class ContactsService {
   }
 
   async createContact(contact: Contact) {
+
+    if (this.authService.isDemoMode()) {
+      const newContact = {
+        ...contact,
+        id: Date.now(),
+        active: true,
+      };
+
+      DEMO_CONTACTS.push(newContact);
+
+      return newContact;
+    }
+
     const userId = await this.getCurrentUserId();
 
     const { data, error } = await this.supabase.client
@@ -53,6 +76,22 @@ export class ContactsService {
   }
 
   async updateContact(id: number, contact: Partial<Contact>) {
+
+    if (this.authService.isDemoMode()) {
+      const index = DEMO_CONTACTS.findIndex(
+        contactItem => contactItem.id === id
+      );
+
+      if (index !== -1) {
+        DEMO_CONTACTS[index] = {
+          ...DEMO_CONTACTS[index],
+          ...contact,
+        };
+      }
+
+      return;
+    }
+
     const userId = await this.getCurrentUserId();
 
     const { error } = await this.supabase.client
@@ -65,24 +104,43 @@ export class ContactsService {
   }
 
   async deleteContact(id: number) {
-  const userId = await this.getCurrentUserId();
 
-  const { data, error } = await this.supabase.client
-    .from('contacts')
-    .update({ active: false })
-    .eq('id', id)
-    .eq('user_id', userId)
-    .select()
-    
+    if (this.authService.isDemoMode()) {
+      const contact = DEMO_CONTACTS.find(
+        contactItem => contactItem.id === id
+      );
 
-  if (error) throw error;
+      if (contact) {
+        contact.active = false;
+      }
 
-  console.log('Contacto actualizado:', data);
+      return;
+    }
 
-  return data;
-}
+    const userId = await this.getCurrentUserId();
+
+    const { data, error } = await this.supabase.client
+      .from('contacts')
+      .update({ active: false })
+      .eq('id', id)
+      .eq('user_id', userId)
+      .select();
+
+    if (error) throw error;
+
+    console.log('Contacto actualizado:', data);
+
+    return data;
+  }
 
   async getContactById(id: number) {
+
+    if (this.authService.isDemoMode()) {
+      return DEMO_CONTACTS.find(
+        contact => contact.id === id
+      );
+    }
+
     const userId = await this.getCurrentUserId();
 
     const { data, error } = await this.supabase.client
@@ -98,6 +156,15 @@ export class ContactsService {
   }
 
   async recoverContacts() {
+
+    if (this.authService.isDemoMode()) {
+      DEMO_CONTACTS.forEach(contact => {
+        contact.active = true;
+      });
+
+      return;
+    }
+
     const userId = await this.getCurrentUserId();
 
     const { error } = await this.supabase.client
