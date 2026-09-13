@@ -12,25 +12,65 @@
 }
 
 /* HEADER */
-
 .dashboard-header {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.1rem;
 }
 
 .title-container {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
+  width: 100%;
+  min-height: 72px;
 }
 
 .title-container h1 {
   margin: 0;
-  font-size: 1.8rem;
-  font-weight: 600;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
+/* Botón de recuperación */
 .icon {
-  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f5f3f3;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+
+.icon:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+}
+
+/* Ajuste del icono interno */
+.icon mat-icon {
+  font-size: 30px;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+}
+
+/* Logout extremo derecho */
+.logout-button {
+  margin-left: auto;
+  cursor: pointer;
+  font-size: 2rem;
+  width: 40px;
+  height: 40px;
+  transition: all 0.25s ease;
+}
+
+.logout-button:hover {
+  transform: scale(1.1);
+  color: #ff6b6b;
 }
 
 .back-link {

@@ -65,16 +65,22 @@ export class ContactsService {
   }
 
   async deleteContact(id: number) {
-    const userId = await this.getCurrentUserId();
+  const userId = await this.getCurrentUserId();
 
-    const { error } = await this.supabase.client
-      .from('contacts')
-      .update({ active: false })
-      .eq('id', id)
-      .eq('user_id', userId);
+  const { data, error } = await this.supabase.client
+    .from('contacts')
+    .update({ active: false })
+    .eq('id', id)
+    .eq('user_id', userId)
+    .select()
+    
 
-    if (error) throw error;
-  }
+  if (error) throw error;
+
+  console.log('Contacto actualizado:', data);
+
+  return data;
+}
 
   async getContactById(id: number) {
     const userId = await this.getCurrentUserId();
