@@ -1,17 +1,18 @@
-import { Component, inject, signal, computed } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { Router } from '@angular/router';
+import { Component, computed, inject, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+
 import { MatButtonModule } from '@angular/material/button';
-import { ContactsService } from '../../data-access/contacts.service';
-import { Contact } from '../../models/contact.interface';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { AuthService } from '../../../core/services/auth.service';
-import { SupabaseService } from '../../../core/services/supabase.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
+
+import { ContactsService } from '../../data-access/contacts.service';
+import { Contact } from '../../models/contact.interface';
+import { AuthService } from '../../../core/services/auth.service';
+import { SupabaseService } from '../../../core/services/supabase.service';
 import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm-dialog';
 
 @Component({
@@ -29,67 +30,85 @@ import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm
   styleUrl: './dashboard.scss',
 })
 export class Dashboard {
-  private contactsService = inject(ContactsService);
-  private router = inject(Router);
-  private authService = inject(AuthService);
-  private supabase = inject(SupabaseService);
-  private snackBar = inject(MatSnackBar);
-  private dialog = inject(MatDialog);
+  private readonly contactsService = inject(ContactsService);
+  private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
+  private readonly supabase = inject(SupabaseService);
+  private readonly snackBar = inject(MatSnackBar);
+  private readonly dialog = inject(MatDialog);
+
+  private readonly ANIMATION_DURATION = 400;
+
   contacts = signal<Contact[]>([]);
-  openedLetter: string | null = null;
   searchTerm = signal('');
-  removingContactId: number | null = null;
-  async ngOnInit() {
+
+  openedLetter: string | null = null;
+  removingContactId = signal<number | null>(null);
+
+  async ngOnInit(): Promise<void> {
     await this.loadContacts();
   }
 
-  async loadContacts() {
-    const {
-      data: { session },
-    } = await this.supabase.client.auth.getSession();
-
-    console.log(session);
-
+  async loadContacts(): Promise<void> {
     try {
       const contacts = await this.contactsService.getContacts();
-      console.log('CONTACTS:', contacts);
+
       this.contacts.set(contacts);
 
       const selectedId = sessionStorage.getItem('selectedContactId');
 
-      if (selectedId) {
-        const contact = contacts.find((c) => c.id === Number(selectedId));
-
-        if (contact) {
-          setTimeout(() => {
-            this.selectContact(contact);
-          }, 100);
-        }
-
-        sessionStorage.removeItem('selectedContactId');
+      if (!selectedId) {
+        return;
       }
+
+      const contact = contacts.find((c) => c.id === Number(selectedId));
+
+      if (contact) {
+        setTimeout(() => this.selectContact(contact), 100);
+      }
+
+      sessionStorage.removeItem('selectedContactId');
     } catch (error) {
       console.error('LOAD CONTACTS ERROR:', error);
     }
   }
 
-  async deleteContact(id: number): Promise<void> {
-    this.removingContactId = id;
+ async deleteContact(id: number): Promise<void> {
+  try {
+    this.removingContactId.set(id);
 
-    setTimeout(async () => {
-      await this.contactsService.deleteContact(id);
+    await this.delay(300);
 
-      this.contacts.update((contacts) => contacts.filter((contact) => contact.id !== id));
+    await this.contactsService.deleteContact(id);
 
-      this.removingContactId = null;
-    }, 400);
+    this.contacts.update((contacts) =>
+      contacts.filter((contact) => contact.id !== id),
+    );
+
+    this.snackBar.open('✅ Contacto eliminado', 'Cerrar', {
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+    });
+  } catch (error) {
+    console.error('Error al eliminar contacto:', error);
+
+    this.snackBar.open('❌ Contacto no eliminado', 'Cerrar', {
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
+    });
+  } finally {
+    this.removingContactId.set(null);
   }
+}
 
   updateContact(id: number): void {
     sessionStorage.setItem('selectedContact', id.toString());
 
     this.router.navigate(['/contacts/update', id]);
   }
+
   get contactsByLetter(): Record<string, Contact[]> {
     return this.contacts().reduce(
       (groups, contact) => {
@@ -97,10 +116,7 @@ export class Dashboard {
 
         const key = /^[A-ZÁÉÍÓÚÑ]$/i.test(firstChar) ? firstChar : '#';
 
-        if (!groups[key]) {
-          groups[key] = [];
-        }
-
+        groups[key] ??= [];
         groups[key].push(contact);
 
         return groups;
@@ -121,6 +137,7 @@ export class Dashboard {
   toggleAccordion(letter: string): void {
     this.openedLetter = this.openedLetter === letter ? null : letter;
   }
+
   filteredContacts = computed(() => {
     const term = this.searchTerm().trim().toLowerCase();
 
@@ -141,16 +158,14 @@ export class Dashboard {
   selectContact(contact: Contact): void {
     this.searchTerm.set(contact.name);
 
-    const letter = contact.name.charAt(0).toUpperCase();
+    this.openedLetter = contact.name.charAt(0).toUpperCase();
 
-    // abrir acordeón
-    this.openedLetter = letter;
-
-    // esperar a que Angular renderice
     setTimeout(() => {
       const element = document.getElementById(`contact-${contact.id}`);
 
-      if (!element) return;
+      if (!element) {
+        return;
+      }
 
       element.scrollIntoView({
         behavior: 'smooth',
@@ -163,23 +178,30 @@ export class Dashboard {
         element.classList.remove('highlight-card');
       }, 3000);
     });
+
     this.searchTerm.set('');
   }
 
-  recoverContacts(): void {
-    this.contactsService.recoverContacts().then(() => {
-      this.loadContacts();
+  async recoverContacts(): Promise<void> {
+    await this.contactsService.recoverContacts();
+
+    await this.loadContacts();
+
+    this.snackBar.open('✅ Contactos recuperados', 'Cerrar', {
+      duration: 3000,
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
     });
   }
 
   async logout(): Promise<void> {
-    await (this.authService as { signOut: () => Promise<void> }).signOut();
+    await this.authService.signOut();
   }
 
   copyToClipboard(value: string): void {
     navigator.clipboard.writeText(value);
 
-    this.snackBar.open('Copiado al portapapeles', 'Cerrar', {
+    this.snackBar.open('📋 Copiado al portapapeles', 'Cerrar', {
       duration: 2000,
     });
   }
@@ -193,12 +215,16 @@ export class Dashboard {
       },
     });
 
-    dialogRef.afterClosed().subscribe(async (confirmed) => {
+    dialogRef.afterClosed().subscribe(async (confirmed: boolean) => {
       if (!confirmed) {
         return;
       }
 
       await this.deleteContact(contact.id);
     });
+  }
+
+  private delay(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

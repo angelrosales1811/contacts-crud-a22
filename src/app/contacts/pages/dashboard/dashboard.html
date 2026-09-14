@@ -87,7 +87,7 @@
                   <article
                     class="contact-card"
                     [id]="'contact-' + contact.id"
-                    [class.removing]="removingContactId === contact.id"
+                    [class.removing]="removingContactId() === contact.id"
                   >
                     <div class="card-actions">
                       <mat-icon [matMenuTriggerFor]="contactMenu" class="menu-button">

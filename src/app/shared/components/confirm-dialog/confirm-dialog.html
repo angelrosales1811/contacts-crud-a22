@@ -5,11 +5,19 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button (click)="cancel()">
+  <button
+    mat-button
+    class="dialog-btn dialog-btn-cancel"
+    (click)="cancel()"
+  >
     Cancelar
   </button>
 
-  <button mat-button color="warn" (click)="confirm()">
+  <button
+    mat-button
+    class="dialog-btn dialog-btn-delete"
+    (click)="confirm()"
+  >
     Eliminar
   </button>
 </mat-dialog-actions>
