@@ -23,9 +23,11 @@
     <div class="search-container">
       <input
         type="text"
-        placeholder="Buscar contacto..."
+        placeholder="Buscar contacto..." 
         [value]="searchTerm()"
         (input)="searchTerm.set($any($event.target).value)"
+        matTooltip="Nombre, teléfono o e-mail"
+        matTooltipPosition="above"
       />
 
       @if (filteredContacts().length > 0) {
@@ -45,106 +47,113 @@
     </button>
   </section>
 
-  <section class="accordion-container">
-    @for (letter of letters; track letter) {
-      <div class="accordion-item" [class.expanded]="openedLetter === letter">
-        <button class="accordion-header" (click)="toggleAccordion(letter)">
-          <div class="accordion-title">
-            <div
-              class="letter-badge"
-              [matBadge]="contactsByLetter[letter].length"
-              [matBadgeHidden]="contactsByLetter[letter].length === 0"
-              matBadgeColor="warn"
-              [matTooltip]="
-                contactsByLetter[letter].length +
-                ' contacto' +
-                (contactsByLetter[letter].length !== 1 ? 's' : '')
-              "
-              matTooltipPosition="above"
-            >
-              @if (letter === '#') {
-                <mat-icon>tag</mat-icon>
-              } @else {
-                {{ letter }}
-              }
+  @if (letters.length) {
+    <section class="accordion-container">
+      @for (letter of letters; track letter) {
+        <div class="accordion-item" [class.expanded]="openedLetter === letter">
+          <button class="accordion-header" (click)="toggleAccordion(letter)">
+            <div class="accordion-title">
+              <div
+                class="letter-badge"
+                [matBadge]="contactsByLetter[letter].length"
+                [matBadgeHidden]="contactsByLetter[letter].length === 0"
+                matBadgeColor="warn"
+                [matTooltip]="
+                  contactsByLetter[letter].length +
+                  ' contacto' +
+                  (contactsByLetter[letter].length !== 1 ? 's' : '')
+                "
+                matTooltipPosition="above"
+              >
+                @if (letter === '#') {
+                  <mat-icon>tag</mat-icon>
+                } @else {
+                  {{ letter }}
+                }
+              </div>
             </div>
-          </div>
 
-          <span class="accordion-icon">
-            <mat-icon>
-              {{ openedLetter === letter ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
-            </mat-icon>
-          </span>
-        </button>
+            <span class="accordion-icon">
+              <mat-icon>
+                {{ openedLetter === letter ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
+              </mat-icon>
+            </span>
+          </button>
 
-        @if (openedLetter === letter) {
-          <div class="accordion-content">
-            <div class="contacts-grid">
-              @for (contact of contactsByLetter[letter]; track contact.id) {
-                <article
-                  class="contact-card"
-                  [id]="'contact-' + contact.id"
-                  [class.removing]="removingContactId === contact.id"
-                >
-                  <div class="card-actions">
-                    <mat-icon [matMenuTriggerFor]="contactMenu" class="menu-button">
-                      more_vert
-                    </mat-icon>
+          @if (openedLetter === letter) {
+            <div class="accordion-content">
+              <div class="contacts-grid">
+                @for (contact of contactsByLetter[letter]; track contact.id) {
+                  <article
+                    class="contact-card"
+                    [id]="'contact-' + contact.id"
+                    [class.removing]="removingContactId === contact.id"
+                  >
+                    <div class="card-actions">
+                      <mat-icon [matMenuTriggerFor]="contactMenu" class="menu-button">
+                        more_vert
+                      </mat-icon>
 
-                    <mat-menu #contactMenu="matMenu" class="menu-icons">
-                      <div class="menu-icons-container">
-                        <mat-icon class="edit-icon" (click)="updateContact(contact.id)">
-                          edit
-                        </mat-icon>
+                      <mat-menu #contactMenu="matMenu" class="menu-icons">
+                        <div class="menu-icons-container">
+                          <mat-icon class="edit-icon" (click)="updateContact(contact.id)">
+                            edit
+                          </mat-icon>
 
-                        <mat-icon class="delete-icon" (click)="confirmDelete(contact)">
-                          delete
-                        </mat-icon>
-                      </div>
-                    </mat-menu>
-                  </div>
+                          <mat-icon class="delete-icon" (click)="confirmDelete(contact)">
+                            delete
+                          </mat-icon>
+                        </div>
+                      </mat-menu>
+                    </div>
 
-                  <div class="info-row">
-                    <mat-icon
-                      matTooltip="copiar"
-                      (click)="copyToClipboard(contact.name)"
-                      class="copy-icon"
-                    >
-                      person
-                    </mat-icon>
+                    <div class="info-row">
+                      <mat-icon
+                        matTooltip="copiar"
+                        (click)="copyToClipboard(contact.name)"
+                        class="copy-icon"
+                      >
+                        person
+                      </mat-icon>
 
-                    <span>{{ contact.name }}</span>
-                  </div>
+                      <span>{{ contact.name }}</span>
+                    </div>
 
-                  <div class="info-row">
-                    <mat-icon
-                      matTooltip="copiar"
-                      (click)="copyToClipboard(contact.phone)"
-                      class="copy-icon"
-                    >
-                      phone
-                    </mat-icon>
+                    <div class="info-row">
+                      <mat-icon
+                        matTooltip="copiar"
+                        (click)="copyToClipboard(contact.phone)"
+                        class="copy-icon"
+                      >
+                        phone
+                      </mat-icon>
 
-                    <span>{{ contact.phone }}</span>
-                  </div>
+                      <span>{{ contact.phone }}</span>
+                    </div>
 
-                  <div class="info-row">
-                    <mat-icon
-                      matTooltip="copiar"
-                      (click)="copyToClipboard(contact.email)"
-                      class="copy-icon"
-                    >
-                      email
-                    </mat-icon>
+                    <div class="info-row">
+                      <mat-icon
+                        matTooltip="copiar"
+                        (click)="copyToClipboard(contact.email)"
+                        class="copy-icon"
+                      >
+                        email
+                      </mat-icon>
 
-                    <span>{{ contact.email }}</span>
-                  </div>
-                </article>
-              }
+                      <span>{{ contact.email }}</span>
+                    </div>
+                  </article>
+                }
+              </div>
             </div>
-          </div>
-        }
-      </div>
-    }
-  </section>
+          }
+        </div>
+      }
+    </section>
+  } @else {
+    <div class="empty-state">
+      <mat-icon>person_off</mat-icon>
+      <p>Sin registros para mostrar, crea contactos.</p>
+    </div>
+  }
 </div>
